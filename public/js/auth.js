@@ -1,4 +1,4 @@
-// Client-side authentication controller for LogDesk
+// Client-side authentication controller for LogBuk
 
 function parseJwt(token) {
   try {
@@ -14,23 +14,23 @@ function parseJwt(token) {
 }
 
 function getSessionToken() {
-  return sessionStorage.getItem('logdesk_session_token');
+  return sessionStorage.getItem('logbuk_session_token');
 }
 
 function setSessionToken(token, databaseUrl) {
-  sessionStorage.setItem('logdesk_session_token', token);
+  sessionStorage.setItem('logbuk_session_token', token);
   if (databaseUrl) {
-    sessionStorage.setItem('logdesk_db_url', databaseUrl);
+    sessionStorage.setItem('logbuk_db_url', databaseUrl);
   }
 }
 
 function clearSession() {
-  sessionStorage.removeItem('logdesk_session_token');
-  sessionStorage.removeItem('logdesk_db_url');
+  sessionStorage.removeItem('logbuk_session_token');
+  sessionStorage.removeItem('logbuk_db_url');
 }
 
 function getDatabaseUrl() {
-  return sessionStorage.getItem('logdesk_db_url');
+  return sessionStorage.getItem('logbuk_db_url');
 }
 
 function isAuthenticated(expectedType) {
@@ -82,7 +82,7 @@ async function loginWithPin(pin, type) {
 }
 
 // Expose functions globally for layout pages
-window.LogDeskAuth = {
+window.LogBukAuth = {
   getSessionToken,
   clearSession,
   isAuthenticated,

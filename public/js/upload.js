@@ -9,7 +9,7 @@ function checkSessionState() {
   const authContainer = document.getElementById('auth-container');
   const appContainer = document.getElementById('app-container');
 
-  if (window.LogDeskAuth.isAuthenticated('upload')) {
+  if (window.LogBukAuth.isAuthenticated('upload')) {
     authContainer.style.display = 'none';
     appContainer.style.display = 'flex';
   } else {
@@ -28,7 +28,7 @@ async function handleAuthSubmit(event) {
   submitBtn.disabled = true;
   submitBtn.innerText = 'Unlocking...';
 
-  const result = await window.LogDeskAuth.loginWithPin(pinInput.value, 'upload');
+  const result = await window.LogBukAuth.loginWithPin(pinInput.value, 'upload');
 
   submitBtn.disabled = false;
   submitBtn.innerText = 'Unlock Interface';
@@ -44,7 +44,7 @@ async function handleAuthSubmit(event) {
 }
 
 function handleLogout() {
-  window.LogDeskAuth.clearSession();
+  window.LogBukAuth.clearSession();
   checkSessionState();
   resetUploadState();
 }
@@ -181,7 +181,7 @@ async function uploadImagePayload(base64Image) {
   }, 100);
 
   try {
-    const token = window.LogDeskAuth.getSessionToken();
+    const token = window.LogBukAuth.getSessionToken();
     const response = await fetch('/api/process-image', {
       method: 'POST',
       headers: {

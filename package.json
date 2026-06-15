@@ -1,7 +1,7 @@
 {
-  "name": "logdesk",
+  "name": "logbuk",
   "version": "1.0.0",
-  "description": "LogDesk — Real-Time Logbook Digitization Platform",
+  "description": "LogBuk — Real-Time Logbook Digitization Platform",
   "main": "api/verify-pin.js",
   "scripts": {
     "start": "vercel dev",

@@ -1,4 +1,4 @@
-// Client-side Excel export utility using SheetJS for LogDesk
+// Client-side Excel export utility using SheetJS for LogBuk
 
 function exportTableToExcel(headers, rows) {
   if (typeof XLSX === 'undefined') {
@@ -11,12 +11,12 @@ function exportTableToExcel(headers, rows) {
     return;
   }
 
-  // Generate filename: logdesk-export-YYYY-MM-DD.xlsx
+  // Generate filename: logbuk-export-YYYY-MM-DD.xlsx
   const now = new Date();
   const yyyy = now.getFullYear();
   const mm = String(now.getMonth() + 1).padStart(2, '0');
   const dd = String(now.getDate()).padStart(2, '0');
-  const filename = `logdesk-export-${yyyy}-${mm}-${dd}.xlsx`;
+  const filename = `logbuk-export-${yyyy}-${mm}-${dd}.xlsx`;
 
   // Build spreadsheet grid starting with headers, then adding row values ordered by headers
   const data = [headers];
@@ -46,13 +46,13 @@ function exportTableToExcel(headers, rows) {
   });
   ws['!cols'] = colWidths;
 
-  XLSX.utils.book_append_sheet(wb, ws, "LogDesk Records");
+  XLSX.utils.book_append_sheet(wb, ws, "LogBuk Records");
 
   // Output file download trigger
   XLSX.writeFile(wb, filename);
 }
 
 // Expose globally
-window.LogDeskExport = {
+window.LogBukExport = {
   exportTableToExcel
 };

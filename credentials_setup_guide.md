@@ -1,6 +1,6 @@
-# LogDesk Credentials Setup Guide
+# LogBuk Credentials Setup Guide
 
-Listen up! Grab a coffee, sit down, and focus, because we are going to connect your LogDesk application to the real world! ☕
+Listen up! Grab a coffee, sit down, and focus, because we are going to connect your LogBuk application to the real world! ☕
 
 This guide contains the absolute most detailed, step-by-step walkthrough to get every single API key, URL, and secret token you need. We're going to break down Google AI Studio, Firebase Realtime Database, and Cloudinary.
 
@@ -10,7 +10,7 @@ At the very bottom of this file, you will find the **Variables configuration sec
 
 ## 1. Google Gemini API Key (Google AI Studio)
 
-We need the brain of LogDesk! Google Gemini 2.5 Flash will do the heavy lifting of reading the handwritten logbooks and converting them to structured JSON.
+We need the brain of LogBuk! Google Gemini 2.5 Flash will do the heavy lifting of reading the handwritten logbooks and converting them to structured JSON.
 
 ### Step-by-Step Walkthrough:
 1. Open your browser and navigate to: **[Google AI Studio](https://aistudio.google.com/)**
@@ -33,7 +33,7 @@ We need real-time data sync! When our Vercel backend extracts structured data, i
 1. Navigate to the **[Firebase Console](https://console.firebase.google.com/)** in your browser.
 2. Sign in with your Google account.
 3. Click the big card that says **"Add project"** (or "Create a project").
-   - **Step 1 of 3 (Project name)**: Enter a name like `LogDesk` and click **"Continue"**.
+   - **Step 1 of 3 (Project name)**: Enter a name like `LogBuk` and click **"Continue"**.
    - **Step 2 of 3 (Google Analytics)**: Toggle **Google Analytics OFF** (this is just an investor demo, and turning it off will make project creation much faster!). Click **"Create project"**.
    - **Step 3 of 3 (Provisioning)**: Wait a few seconds for Firebase to set up your project resources. Once it finishes, click **"Continue"**.
 4. You are now on the project home dashboard. Look at the left-hand navigation menu:
@@ -108,7 +108,7 @@ Please replace the values inside the quotes with your actual credentials. Do not
 const CONFIG_KEYS = {
   UPLOAD_PIN: "1234",             // Change to your desired 4-digit upload PIN
   VIEWER_PIN: "5678",             // Change to your desired 4-digit viewer PIN
-  SESSION_SECRET: "logdesk_super_secret_session_jwt_key_123456", // Change to a long random secret string
+  SESSION_SECRET: "logbuk_super_secret_session_jwt_key_123456", // Change to a long random secret string
   
   GEMINI_API_KEY: "PASTE_YOUR_GEMINI_API_KEY_HERE",
   

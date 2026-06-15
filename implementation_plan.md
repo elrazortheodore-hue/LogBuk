@@ -1,6 +1,6 @@
-# Implementation Plan — LogDesk Real-Time Digitization Platform
+# Implementation Plan — LogBuk Real-Time Digitization Platform
 
-This document outlines the architecture, data structures, and implementation tasks for the **LogDesk** production-ready investor demo.
+This document outlines the architecture, data structures, and implementation tasks for the **LogBuk** production-ready investor demo.
 
 ## User Review Required
 
@@ -18,13 +18,13 @@ Please review the environment variables and the proposed connection flow:
 ### Component 1: Project Setup & Vercel Configuration
 We will set up the project configuration and dependency management to support standard Vercel serverless functions and asset routing.
 
-#### [NEW] [package.json](file:///c:/Users/USER/Documents/Codes and projects/LogDesk/package.json)
+#### [NEW] [package.json](file:///c:/Users/USER/Documents/Codes and projects/LogBuk/package.json)
 Defines project dependencies:
 - `@google/generative-ai` for Gemini 2.5 Flash integration.
 - `cloudinary` for image storage.
 - `jsonwebtoken` for issuing and validating signed 10-minute session tokens.
 
-#### [NEW] [vercel.json](file:///c:/Users/USER/Documents/Codes and projects/LogDesk/vercel.json)
+#### [NEW] [vercel.json](file:///c:/Users/USER/Documents/Codes and projects/LogBuk/vercel.json)
 Configures clean URLs, routes requests to serverless functions, and serves static files.
 
 #### [NEW] [.env.example](file:///c:/Users/USER/Documents/Codes and projects/LogDesk/.env.example)
@@ -70,7 +70,7 @@ Global styling for corporate branding, input controls, custom spreadsheet table 
 Client-side session controller that monitors token lifetime and performs redirection.
 
 #### [NEW] [logo.svg](file:///c:/Users/USER/Documents/Codes and projects/LogDesk/public/assets/logo.svg)
-Corporate SVG logo for LogDesk.
+Corporate SVG logo for LogBuk.
 
 #### [NEW] [upload.html](file:///c:/Users/USER/Documents/Codes and projects/LogDesk/public/upload.html)
 Mobile-first scanning screen with image selection, camera access, and status monitoring.

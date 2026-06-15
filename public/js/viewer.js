@@ -1,11 +1,11 @@
-// LogDesk Viewer Logic
+// LogBuk Viewer Logic
 
 let currentData = {};
 let eventSource = null;
 let dynamicHeaders = new Set();
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (LogDeskAuth.isAuthenticated('viewer')) {
+  if (LogBukAuth.isAuthenticated('viewer')) {
     showDashboard();
   } else {
     showAuth();
@@ -22,7 +22,7 @@ async function handleAuthSubmit(event) {
   btn.disabled = true;
   btn.textContent = 'Verifying...';
 
-  const result = await LogDeskAuth.loginWithPin(pinInput, 'viewer');
+  const result = await LogBukAuth.loginWithPin(pinInput, 'viewer');
   
   if (result.success) {
     showDashboard();
@@ -34,7 +34,7 @@ async function handleAuthSubmit(event) {
 }
 
 function handleLogout() {
-  LogDeskAuth.clearSession();
+  LogBukAuth.clearSession();
   if (eventSource) {
     eventSource.close();
     eventSource = null;
@@ -55,7 +55,7 @@ function showDashboard() {
 }
 
 function initFirebaseStream() {
-  const dbUrl = LogDeskAuth.getDatabaseUrl();
+  const dbUrl = LogBukAuth.getDatabaseUrl();
   if (!dbUrl) {
     console.error('Database URL not found in session.');
     return;
@@ -223,7 +223,7 @@ function exportToExcel() {
         return;
     }
     const table = document.getElementById('records-table');
-    const wb = XLSX.utils.table_to_book(table, {sheet: "LogDesk Records"});
+    const wb = XLSX.utils.table_to_book(table, {sheet: "LogBuk Records"});
     const dateStr = new Date().toISOString().split('T')[0];
-    XLSX.writeFile(wb, `logdesk-export-${dateStr}.xlsx`);
+    XLSX.writeFile(wb, `logbuk-export-${dateStr}.xlsx`);
 }

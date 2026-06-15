@@ -1,6 +1,6 @@
-# LogDesk
+# LogBuk
 
-LogDesk is a production-ready enterprise logbook digitization platform. It provides a real-time bridge between physical written records and structured digital data.
+LogBuk is a production-ready enterprise logbook digitization platform. It provides a real-time bridge between physical written records and structured digital data.
 
 ## Overview
 
@@ -13,14 +13,14 @@ LogDesk is a production-ready enterprise logbook digitization platform. It provi
 
 ## Setup Instructions
 
-LogDesk is a vanilla JavaScript application designed to be deployed instantly on Vercel without a build step. It relies on Vercel Serverless Functions (`/api/*`) for backend processing and authentication.
+LogBuk is a vanilla JavaScript application designed to be deployed instantly on Vercel without a build step. It relies on Vercel Serverless Functions (`/api/*`) for backend processing and authentication.
 
 ### Local Development
 
 1. **Clone the repository:**
    ```bash
    git clone <repository-url>
-   cd LogDesk
+   cd LogBuk
    ```
 
 2. **Install Vercel CLI & Dependencies:**
@@ -44,7 +44,7 @@ LogDesk is a vanilla JavaScript application designed to be deployed instantly on
 
 ### Production Deployment
 
-LogDesk deploys directly to Vercel without code modifications.
+LogBuk deploys directly to Vercel without code modifications.
 
 1. Install the Vercel GitHub App or use the Vercel CLI:
    ```bash
