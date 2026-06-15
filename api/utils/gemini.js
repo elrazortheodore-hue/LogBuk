@@ -1,4 +1,5 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { retry } = require('./retry');
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
@@ -52,12 +53,23 @@ You must output valid JSON matching the following schema:
 Only return a JSON object that adheres strictly to this structure. Do not wrap the JSON object inside markdown backticks.
   `.trim();
 
-  const result = await model.generateContent([prompt, imagePart]);
-  const response = await result.response;
-  const text = response.text();
+  // Retry the content generation API call up to 3 times to handle rate limits or transient Google API failures
+  const text = await retry(async () => {
+    const result = await model.generateContent([prompt, imagePart]);
+    const response = await result.response;
+    return response.text();
+  }, 3, 1500);
+
+  // Clean the text from markdown code blocks in case Gemini ignored the prompt instructions
+  let cleanedText = text.trim();
+  if (cleanedText.startsWith("```")) {
+    cleanedText = cleanedText.replace(/^```[a-zA-Z]*\n/, "");
+    cleanedText = cleanedText.replace(/\n```$/, "");
+    cleanedText = cleanedText.trim();
+  }
 
   try {
-    return JSON.parse(text);
+    return JSON.parse(cleanedText);
   } catch (error) {
     console.error("Gemini failed to return valid JSON. Response text was:", text);
     throw new Error("Intelligent extraction could not parse the document structure correctly.");

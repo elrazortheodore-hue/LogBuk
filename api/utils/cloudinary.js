@@ -1,4 +1,5 @@
 const cloudinary = require('cloudinary').v2;
+const { retry } = require('./retry');
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -18,13 +19,16 @@ async function uploadToCloudinary(base64Image) {
   const folderPath = `logs/${yyyy}/${mm}/${dd}`;
 
   try {
-    const result = await cloudinary.uploader.upload(base64Image, {
-      folder: folderPath,
-      resource_type: "image"
-    });
-    return result.secure_url;
+    const secureUrl = await retry(async () => {
+      const result = await cloudinary.uploader.upload(base64Image, {
+        folder: folderPath,
+        resource_type: "image"
+      });
+      return result.secure_url;
+    }, 3, 1000);
+    return secureUrl;
   } catch (error) {
-    console.error("Cloudinary upload failed:", error);
+    console.error("Cloudinary upload failed after retries:", error);
     throw new Error("Image archiving failed.");
   }
 }

@@ -110,39 +110,61 @@ function compressAndUpload(file) {
   const img = new Image();
   img.src = URL.createObjectURL(file);
   
-  img.onload = () => {
-    // Release the object URL
+  img.onerror = () => {
+    console.warn("Canvas image loading failed. Falling back to raw file upload.");
     URL.revokeObjectURL(img.src);
-
-    const maxDimension = 1600;
-    let width = img.width;
-    let height = img.height;
-
-    // Calculate optimal dimensions
-    if (width > height) {
-      if (width > maxDimension) {
-        height = Math.round((height * maxDimension) / width);
-        width = maxDimension;
-      }
-    } else {
-      if (height > maxDimension) {
-        width = Math.round((width * maxDimension) / height);
-        height = maxDimension;
-      }
-    }
-
-    const canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0, width, height);
-
-    // Export to JPEG with 0.8 quality for high resolution but small filesize
-    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
-    
-    uploadImagePayload(compressedBase64);
+    uploadRawFile(file);
   };
+  
+  img.onload = () => {
+    try {
+      // Release the object URL
+      URL.revokeObjectURL(img.src);
+
+      const maxDimension = 1600;
+      let width = img.width;
+      let height = img.height;
+
+      // Calculate optimal dimensions
+      if (width > height) {
+        if (width > maxDimension) {
+          height = Math.round((height * maxDimension) / width);
+          width = maxDimension;
+        }
+      } else {
+        if (height > maxDimension) {
+          width = Math.round((width * maxDimension) / height);
+          height = maxDimension;
+        }
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // Export to JPEG with 0.8 quality for high resolution but small filesize
+      const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+      
+      uploadImagePayload(compressedBase64);
+    } catch (err) {
+      console.warn("Canvas compression failed. Falling back to raw file upload. Error:", err);
+      uploadRawFile(file);
+    }
+  };
+}
+
+function uploadRawFile(file) {
+  const reader = new FileReader();
+  reader.onerror = () => {
+    handleUploadError("Failed to read the document file.");
+  };
+  reader.onload = (e) => {
+    uploadImagePayload(e.target.result);
+  };
+  reader.readAsDataURL(file);
 }
 
 async function uploadImagePayload(base64Image) {

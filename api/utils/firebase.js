@@ -1,5 +1,6 @@
 const FIREBASE_DB_URL = process.env.FIREBASE_DB_URL;
 const FIREBASE_SECRET = process.env.FIREBASE_SECRET;
+const { retry } = require('./retry');
 
 async function writeLogToFirebase(logData) {
   if (!FIREBASE_DB_URL) {
@@ -15,21 +16,28 @@ async function writeLogToFirebase(logData) {
     ? `${baseUrl}/logs.json?auth=${FIREBASE_SECRET}`
     : `${baseUrl}/logs.json`;
 
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(logData)
-  });
+  try {
+    const result = await retry(async () => {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(logData)
+      });
 
-  if (!response.ok) {
-    const errorMsg = await response.text();
-    throw new Error(`Firebase write operation failed: ${response.status} - ${errorMsg}`);
+      if (!response.ok) {
+        const errorMsg = await response.text();
+        throw new Error(`Firebase write operation failed: ${response.status} - ${errorMsg}`);
+      }
+
+      return await response.json();
+    }, 3, 1000);
+    return result;
+  } catch (error) {
+    console.error("Firebase write failed after retries:", error);
+    throw error;
   }
-
-  const result = await response.json();
-  return result;
 }
 
 module.exports = {

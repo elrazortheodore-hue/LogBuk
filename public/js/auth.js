@@ -13,24 +13,50 @@ function parseJwt(token) {
   }
 }
 
+const memoryStorage = {};
+
+function safeGet(key) {
+  try {
+    return sessionStorage.getItem(key);
+  } catch (e) {
+    return memoryStorage[key] || null;
+  }
+}
+
+function safeSet(key, value) {
+  try {
+    sessionStorage.setItem(key, value);
+  } catch (e) {
+    memoryStorage[key] = value;
+  }
+}
+
+function safeRemove(key) {
+  try {
+    sessionStorage.removeItem(key);
+  } catch (e) {
+    delete memoryStorage[key];
+  }
+}
+
 function getSessionToken() {
-  return sessionStorage.getItem('logbuk_session_token');
+  return safeGet('logbuk_session_token');
 }
 
 function setSessionToken(token, databaseUrl) {
-  sessionStorage.setItem('logbuk_session_token', token);
+  safeSet('logbuk_session_token', token);
   if (databaseUrl) {
-    sessionStorage.setItem('logbuk_db_url', databaseUrl);
+    safeSet('logbuk_db_url', databaseUrl);
   }
 }
 
 function clearSession() {
-  sessionStorage.removeItem('logbuk_session_token');
-  sessionStorage.removeItem('logbuk_db_url');
+  safeRemove('logbuk_session_token');
+  safeRemove('logbuk_db_url');
 }
 
 function getDatabaseUrl() {
-  return sessionStorage.getItem('logbuk_db_url');
+  return safeGet('logbuk_db_url');
 }
 
 function isAuthenticated(expectedType) {
