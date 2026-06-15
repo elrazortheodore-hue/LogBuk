@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LogDesk — Live Records</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/auth.js"></script>
+  <!-- Load SheetJS for Excel Export -->
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+  <!-- Lock Screen Authentication View -->
+  <div id="auth-container" class="auth-wrapper">
+    <div class="auth-card">
+      <div class="brand-header">
+        <div class="brand-logo-container">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" />
+            <polyline points="14 2 14 8 20 8" stroke="currentColor" />
+            <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" />
+            <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" />
+          </svg>
+        </div>
+        <h2 class="brand-title">Live Records</h2>
+        <p class="brand-subtitle">Audience Dashboard</p>
+      </div>
+
+      <form id="auth-form" onsubmit="handleAuthSubmit(event)">
+        <div class="form-group">
+          <label class="form-label" for="pin-input">Enter Viewer PIN</label>
+          <input type="password" id="pin-input" class="pin-input-field" maxlength="4" placeholder="••••" required inputmode="numeric" pattern="[0-9]*">
+        </div>
+        <button type="submit" class="btn btn-primary" id="unlock-btn">
+          Unlock Dashboard
+        </button>
+      </form>
+      <div id="auth-error" class="error-message"></div>
+    </div>
+  </div>
+
+  <!-- Main Viewer Dashboard -->
+  <div id="app-container" class="app-container" style="display: none;">
+    <div class="viewer-dashboard">
+      <header class="dashboard-top-bar">
+        <div class="top-bar-left">
+          <div class="brand-logo-container-small">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" />
+              <polyline points="14 2 14 8 20 8" stroke="currentColor" />
+              <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" />
+              <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" />
+            </svg>
+          </div>
+          <h1 class="dashboard-title">LogDesk</h1>
+          <div class="live-indicator-group">
+            <span class="live-pulse"></span>
+            <span class="live-text" id="connection-status">Connected</span>
+          </div>
+        </div>
+        
+        <div class="top-bar-right">
+          <button class="btn-icon" onclick="refreshData()" title="Refresh Data">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 1 0 2.13-5.88L2 9"></path></svg>
+            Refresh
+          </button>
+          <button class="btn-icon" onclick="exportToExcel()" title="Export to Excel">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="16" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            Export
+          </button>
+          <button class="btn-icon" onclick="handleLogout()" title="Lock Dashboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            Lock
+          </button>
+        </div>
+      </header>
+      
+      <div class="table-workspace">
+        <div class="table-container">
+          <table class="data-table" id="records-table">
+            <thead id="table-head">
+              <!-- Dynamically populated headers -->
+            </thead>
+            <tbody id="table-body">
+              <!-- Dynamically populated rows -->
+            </tbody>
+          </table>
+          <div id="empty-state" class="empty-state" style="display: none;">
+            <p>No records found. Waiting for uploads...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/excel.js"></script>
+  <script src="/js/viewer.js"></script>
+</body>
+</html>

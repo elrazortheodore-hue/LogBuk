@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LogDesk — Operator Upload Portal</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/auth.js"></script>
+</head>
+<body>
+
+  <!-- Lock Screen Authentication View -->
+  <div id="auth-container" class="auth-wrapper">
+    <div class="auth-card">
+      <div class="brand-header">
+        <div class="brand-logo-container">
+          <!-- Inline SVG Logo for high-resolution rendering -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" />
+            <polyline points="14 2 14 8 20 8" stroke="currentColor" />
+            <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" />
+            <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" />
+          </svg>
+        </div>
+        <h2 class="brand-title">LogDesk</h2>
+        <p class="brand-subtitle">Digital Logbook Processing</p>
+      </div>
+
+      <form id="auth-form" onsubmit="handleAuthSubmit(event)">
+        <div class="form-group">
+          <label class="form-label" for="pin-input">Enter Upload PIN</label>
+          <input type="password" id="pin-input" class="pin-input-field" maxlength="4" placeholder="••••" required inputmode="numeric" pattern="[0-9]*">
+        </div>
+        <button type="submit" class="btn btn-primary" id="unlock-btn">
+          Unlock Interface
+        </button>
+      </form>
+      <div id="auth-error" class="error-message"></div>
+    </div>
+  </div>
+
+  <!-- Main Mobile Operator Upload View -->
+  <div id="app-container" class="app-container">
+    <div class="upload-view-wrapper">
+      <div class="brand-header" style="text-align: center; margin-bottom: 0;">
+        <h2 class="brand-title" style="font-size: 1.25rem;">LogDesk</h2>
+        <p class="brand-subtitle">Operator Upload Portal</p>
+      </div>
+
+      <!-- Interactive Drag & Drop Area / Mobile Camera Trigger -->
+      <div class="upload-area" id="upload-zone" onclick="triggerFileInput()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+          <circle cx="12" cy="13" r="4"></circle>
+        </svg>
+        <div>
+          <p class="upload-area-text">Capture Logbook Page</p>
+          <p class="upload-area-subtext">Tap to use camera or browse photo library</p>
+        </div>
+      </div>
+      <!-- Hidden File Input for Camera and File Access -->
+      <input type="file" id="file-input" accept="image/png, image/jpeg, image/jpg, image/webp" onchange="handleFileSelection(event)">
+
+      <!-- Image Preview Section -->
+      <div class="preview-card" id="preview-section">
+        <h3 class="status-title" style="font-size: 0.8125rem;">Captured Document</h3>
+        <div class="preview-image-container">
+          <img id="preview-thumbnail" src="" alt="Captured Page Preview">
+        </div>
+      </div>
+
+      <!-- Processing Pipeline Status Section -->
+      <div class="status-card" id="status-section">
+        <div class="status-row">
+          <div class="status-spinner" id="status-loader"></div>
+          <!-- Completed icon -->
+          <svg class="status-icon-success" id="status-success-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <div class="status-info">
+            <h4 class="status-title" id="status-main-title">Uploading...</h4>
+            <p class="status-descr" id="status-sub-title">Preparing document payload</p>
+          </div>
+        </div>
+      </div>
+
+      <button onclick="handleLogout()" class="btn btn-secondary" style="margin-top: 1rem;">
+        Lock Console
+      </button>
+    </div>
+  </div>
+
+  <script src="/js/upload.js"></script>
+</body>
+</html>
