@@ -1,6 +1,7 @@
 {
   "cleanUrls": true,
   "rewrites": [
+    { "source": "/", "destination": "/public/viewer.html" },
     { "source": "/upload", "destination": "/public/upload.html" },
     { "source": "/viewer", "destination": "/public/viewer.html" },
     { "source": "/upload.html", "destination": "/public/upload.html" },
