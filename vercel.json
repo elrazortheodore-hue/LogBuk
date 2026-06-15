@@ -1,7 +1,12 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/upload", "destination": "/upload.html" },
-    { "source": "/viewer", "destination": "/viewer.html" }
+    { "source": "/upload", "destination": "/public/upload.html" },
+    { "source": "/viewer", "destination": "/public/viewer.html" },
+    { "source": "/upload.html", "destination": "/public/upload.html" },
+    { "source": "/viewer.html", "destination": "/public/viewer.html" },
+    { "source": "/css/:path*", "destination": "/public/css/:path*" },
+    { "source": "/js/:path*", "destination": "/public/js/:path*" },
+    { "source": "/assets/:path*", "destination": "/public/assets/:path*" }
   ]
 }
