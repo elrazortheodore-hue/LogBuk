@@ -2,8 +2,8 @@ const FIREBASE_DB_URL = process.env.FIREBASE_DB_URL;
 const FIREBASE_SECRET = process.env.FIREBASE_SECRET;
 
 async function writeLogToFirebase(logData) {
-  if (!FIREBASE_DB_URL || !FIREBASE_SECRET) {
-    throw new Error('Firebase database environment variables are missing.');
+  if (!FIREBASE_DB_URL) {
+    throw new Error('Firebase database URL environment variable is missing.');
   }
 
   // Ensure there are no trailing slashes on our DB URL
@@ -11,7 +11,9 @@ async function writeLogToFirebase(logData) {
     ? FIREBASE_DB_URL.slice(0, -1) 
     : FIREBASE_DB_URL;
 
-  const url = `${baseUrl}/logs.json?auth=${FIREBASE_SECRET}`;
+  const url = FIREBASE_SECRET 
+    ? `${baseUrl}/logs.json?auth=${FIREBASE_SECRET}`
+    : `${baseUrl}/logs.json`;
 
   const response = await fetch(url, {
     method: 'POST',
