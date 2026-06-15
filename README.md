@@ -19,7 +19,7 @@ LogBuk is a vanilla JavaScript application designed to be deployed instantly on 
 
 1. **Clone the repository:**
    ```bash
-   git clone <repository-url>
+   git clone <https://github.com/elrazortheodore-hue/LogBuk>
    cd LogBuk
    ```
 
