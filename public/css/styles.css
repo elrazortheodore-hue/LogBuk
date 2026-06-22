@@ -683,3 +683,26 @@ body {
     max-width: 100%;
   }
 }
+
+/* Dynamic Spreadsheet Interactive Styles */
+.resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 5px;
+  cursor: col-resize;
+  user-select: none;
+  z-index: 100;
+}
+
+.resize-handle:hover,
+.resize-handle.resizing {
+  background-color: var(--primary-color);
+  opacity: 0.8;
+}
+
+.row-selected {
+  background-color: var(--primary-light) !important;
+}
+

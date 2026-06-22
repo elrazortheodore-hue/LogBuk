@@ -1,100 +1,139 @@
-# LogBuk
+# LogDesk — Real-Time Logbook Digitization Platform
 
-LogBuk is a production-ready enterprise logbook digitization platform. It provides a real-time bridge between physical written records and structured digital data.
+LogDesk is a production-ready, enterprise-grade system that converts physical logbook pages (printed or handwritten) into structured, live-synchronized digital spreadsheets in real time. 
 
-## Overview
-
-- **Mobile First Operator Upload**: Operators use the mobile-optimized upload portal (`/upload`) to scan physical logbook pages.
-- **Real-Time Live Viewer**: Audience and administrators use the dashboard (`/viewer`) to see new records appear instantly with fluid animations.
-- **Automated Processing Engine**: Images are processed intelligently on the backend.
-- **Enterprise Ready**: Clean corporate aesthetics, robust PIN authentication, spreadsheet-style controls, and Excel export support.
+Built with standard vanilla HTML/CSS/JavaScript and Node.js serverless functions, it archives scans permanently to Cloudinary, extracts document layouts using a backend document-processing engine, and updates live dashboards instantly via Firebase Realtime Database.
 
 ---
 
-## Setup Instructions
+## Technical Architecture
 
-LogBuk is a vanilla JavaScript application designed to be deployed instantly on Vercel without a build step. It relies on Vercel Serverless Functions (`/api/*`) for backend processing and authentication.
+```mermaid
+graph TD
+    A[Mobile Operator upload.html] -->|Compresses & Sends Base64| B[Vercel Serverless Function process-image.js]
+    B -->|Archive Scan| C[Cloudinary YYYY/MM/DD]
+    B -->|Document Understanding| D[Gemini 2.5 Flash Engine]
+    B -->|Write Structured Log| E[Firebase Realtime Database]
+    E -->|Real-Time Event Stream| F[Viewer Dashboard viewer.html]
+```
 
-### Local Development
+---
 
-1. **Clone the repository:**
+## 1. Project Prerequisites & Setup
+
+Ensure you have [Node.js](https://nodejs.org/) installed (v18+ recommended).
+
+1. Clone or download the repository into your local environment.
+2. In the root directory, install all required dependencies:
    ```bash
-   git clone <https://github.com/elrazortheodore-hue/LogBuk>
-   cd LogBuk
-   ```
-
-2. **Install Vercel CLI & Dependencies:**
-   ```bash
-   npm install -g vercel
    npm install
    ```
 
-3. **Configure Environment Variables:**
-   Copy the example template and fill in the values:
-   ```bash
-   cp .env.example .env.local
-   ```
-   *(See Configuration sections below for where to obtain keys).*
+---
 
-4. **Start the local development server:**
-   ```bash
-   vercel dev
-   ```
-   The application will be available at `http://localhost:3000`.
+## 2. Environment Variables Configuration
 
-### Production Deployment
+Create a `.env` file in the root directory (based on `.env.example`) and fill in the following keys:
 
-LogBuk deploys directly to Vercel without code modifications.
+```env
+UPLOAD_PIN=1234
+VIEWER_PIN=5678
+SESSION_SECRET=your_jwt_session_secret_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
+FIREBASE_DB_URL=https://your-firebase-project.firebaseio.com
+FIREBASE_SECRET=your_firebase_database_secret_here
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+```
 
-1. Install the Vercel GitHub App or use the Vercel CLI:
-   ```bash
-   vercel --prod
-   ```
-2. Configure all environment variables in the Vercel Project Settings matching `.env.local`.
-3. Vercel automatically maps `/upload` and `/viewer` via `vercel.json`.
+- **UPLOAD_PIN**: The 4-digit code the mobile operator enters to unlock the camera console.
+- **VIEWER_PIN**: The 4-digit code shared with the audience to unlock the live dashboard.
+- **SESSION_SECRET**: A secure, random string used by the server to sign the 10-minute JWT session tokens.
+- **GEMINI_API_KEY**: Your Google AI Studio API key.
+- **FIREBASE_DB_URL**: The reference URL of your Firebase Realtime Database.
+- **FIREBASE_SECRET**: Legacy Firebase Database secret key used to authorize serverless writes.
+- **CLOUDINARY_CLOUD_NAME / API_KEY / API_SECRET**: Credentials gathered from your Cloudinary Management Console.
 
 ---
 
-## Configuration
+## 3. Database Configuration (Firebase)
 
-### Firebase Configuration
-
-Firebase Realtime Database is used for instant synchronization.
-1. Create a Firebase project.
-2. Provision a **Realtime Database**.
-3. **Database Rules**: Set rules to allow public reads, but restrict writes.
+1. Create a project in the [Firebase Console](https://console.firebase.google.com/).
+2. Select **Realtime Database** and create a database instance. Choose your region and select **Start in locked mode**.
+3. Go to the **Rules** tab of your Realtime Database and set the database security rules to allow read access publicly for the live dashboard stream, while restricting write access to authenticated server calls:
    ```json
    {
      "rules": {
-       ".read": true,
-       ".write": false
+       "logs": {
+         ".read": true,
+         ".write": false
+       }
      }
    }
    ```
-4. Set `FIREBASE_DB_URL` to your database URL (e.g., `https://project-id-default-rtdb.firebaseio.com/`).
-5. Obtain the legacy Database Secret from Firebase Settings > Service Accounts > Database Secrets and set `FIREBASE_SECRET`.
-
-### Cloudinary Configuration
-
-Cloudinary permanently archives logbook scans.
-1. Create a free Cloudinary account.
-2. In the Dashboard, locate your Cloud Name, API Key, and API Secret.
-3. Set `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, and `CLOUDINARY_API_SECRET`.
-
-### Backend Processing Configuration
-
-Google Gemini 2.5 Flash powers the intelligent backend extraction pipeline.
-1. Obtain an API key from Google AI Studio.
-2. Set `GEMINI_API_KEY`.
-*(Note: As per requirements, all AI and LLM terminology is strictly hidden from the frontend and user interfaces).*
-
-### Authentication Configuration
-
-Set 4-digit PINs for operator and viewer access.
-- `UPLOAD_PIN`: (e.g. `1234`) Unlocks the upload portal.
-- `VIEWER_PIN`: (e.g. `5678`) Unlocks the live dashboard.
-- `SESSION_SECRET`: A long random string used to securely sign JSON Web Tokens.
+4. Go to **Project Settings** (gear icon) > **Service Accounts** > **Database Secrets** tab. Copy the secret key and paste it into `.env` as `FIREBASE_SECRET`. Copy the database URL from the database console and set it as `FIREBASE_DB_URL`.
 
 ---
 
-*This application is built for live investor demonstrations and enterprise pilots.*
+## 4. Cloud Storage Configuration (Cloudinary)
+
+1. Register or log in to [Cloudinary](https://cloudinary.com/).
+2. Copy your **Cloud Name**, **API Key**, and **API Secret** from the main dashboard screen and write them to your `.env` variables.
+3. Uploaded images will be organized automatically under date-structured folders (e.g. `logs/2026/06/22/image_xxxx.jpg`) with secure, permanent links.
+
+---
+
+## 5. Processing Engine Integration (Google Gemini)
+
+1. Navigate to [Google AI Studio](https://aistudio.google.com/) and obtain a **Gemini API Key**.
+2. Save this key in `.env` as `GEMINI_API_KEY`.
+3. The serverless route `/api/process-image.js` internally calls the model `gemini-2.5-flash` with the image payload, enforcing a strict JSON response MIME type (`responseMimeType: "application/json"`) to automatically format dynamic tables.
+
+---
+
+## 6. Local Development Instructions
+
+The easiest way to run the application locally is using the Vercel CLI, which emulates both the static files and serverless functions:
+
+1. Install the Vercel CLI globally if you haven't already:
+   ```bash
+   npm install -g vercel
+   ```
+2. Start the local emulator:
+   ```bash
+   vercel dev
+   ```
+3. Open your browser and navigate to:
+   - **Operator Upload Portal**: [http://localhost:3000/upload](http://localhost:3000/upload)
+   - **Live Records Viewer**: [http://localhost:3000/viewer](http://localhost:3000/viewer)
+
+---
+
+## 7. Production Deployment to Vercel
+
+The application is fully pre-configured to be deployed directly to Vercel.
+
+### Option A: Deployment via Vercel CLI (Recommended)
+
+1. Log in to your Vercel account:
+   ```bash
+   vercel login
+   ```
+2. Link and deploy your project (run in root directory):
+   ```bash
+   vercel
+   ```
+3. Set your production environment variables in the Vercel Dashboard under **Project Settings** > **Environment Variables**.
+4. Promote the build to production:
+   ```bash
+   vercel --prod
+   ```
+
+### Option B: Git Integration
+
+1. Push this project to a GitHub repository (e.g. `https://github.com/elrazortheodore-hue/LogDesk`).
+2. Go to the [Vercel Dashboard](https://vercel.com/dashboard) and click **Add New** > **Project**.
+3. Import your GitHub repository.
+4. Expand **Environment Variables** and add all the keys listed in `.env.example`.
+5. Click **Deploy**. Vercel will automatically configure rewrite rules from `vercel.json` and deploy both the serverless routes under `/api` and the static views under `/public`.

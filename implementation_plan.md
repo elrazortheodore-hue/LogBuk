@@ -108,3 +108,5 @@ Comprehensive walkthrough detailing local execution, Firebase rules configuratio
 - Verify status progression: Uploading -> Processing -> Saving -> Completed.
 - Observe the `/viewer` dashboard, check if the record appears live with a slide-in animation.
 - Test inline editing, searching, keyboard navigation, and Excel export.
+
+<!-- CHECKPOINT id="ckpt_mqfdhwgw_dntt1a" time="2026-06-15T15:33:33.728Z" note="auto" fixes=0 questions=0 highlights=0 sections="" -->
